@@ -107,7 +107,7 @@ const SignUpPage = () => {
       .then((res) => {
         toast.success("Account created successfully");
         console.log("api res", res);
-        setCookie(cookieKeys.JWT, res.data.jwt, {
+        setCookie(cookieKeys.JWT, res.data.data.jwt, {
           maxAge: cookieConfig.MAX_AGE,
         });
 

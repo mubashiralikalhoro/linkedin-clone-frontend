@@ -1,44 +1,155 @@
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
+// icons
+import { BiSearchAlt2 } from "react-icons/bi";
+import { BsLinkedin } from "react-icons/bs";
+import { AiFillHome } from "react-icons/ai";
+import { HiUsers } from "react-icons/hi";
+import { useRouter } from "next/router";
+import { MdSearchOff } from "react-icons/md";
 
 const Navbar = () => {
+  const router = useRouter();
+  const [selected, setSelected] = useState("home");
+  const [showSearch, setShowSearch] = useState(false);
+
+  // setting current selected tab
+  useEffect(() => {
+    if (router.pathname.includes("/home")) {
+      setSelected("home");
+    } else if (router.pathname.includes("/profile")) {
+      setSelected("profile");
+    } else if (router.pathname.includes("/connections")) {
+      setSelected("connections");
+    }
+  }, [router.pathname]);
+
+  const handleSearch = (e) => {};
+
   return (
-    <nav className="border-gray-200 px-2 mb-10 w-full bg-slate-800 p-2 px-4">
-      <div className="container mx-auto flex flex-wrap items-center justify-between">
-        <Link href="/">
-          <Image
-            className=" cursor-pointer"
-            src="/images/linkedIn-logo.png"
-            alt="logo"
-            width={100}
-            height={100}
-          />
-        </Link>
-        <div className="relative mr-3 md:mr-0 hidden md:block">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <svg
-              className="w-5 h-5 text-gray-500"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                fillRule="evenodd"
-                d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                clipRule="evenodd"
-              />
-            </svg>
+    <>
+      <nav className="border-gray-200 fixed w-full bg-slate-800 p-2 px-4 flex flex-col items-center">
+        <div className="max-w-6xl w-full">
+          <div className="w-full  mx-auto flex flex-wrap items-center justify-between">
+            {/* logo and search */}
+            <div className="flex gap-2 items-center">
+              <Link href="/">
+                <BsLinkedin className="text-white text-4xl" />
+              </Link>
+
+              {/* search icon for mobile view */}
+              <div
+                className="visible md:hidden ml-2 cursor-pointer hover:scale-110 duration-300 "
+                onClick={() => setShowSearch(!showSearch)}
+              >
+                {showSearch ? (
+                  <MdSearchOff className="text-white text-3xl" />
+                ) : (
+                  <BiSearchAlt2 className="text-white text-3xl" />
+                )}
+              </div>
+
+              {/* search bar */}
+              <div className="relative md:mr-0 md:block md:w-[300px] hidden">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <BiSearchAlt2 className="text-white" />
+                </div>
+                <input
+                  type="text"
+                  id="search"
+                  className="bg-slate-600 text-white sm:text-sm rounded focus:outline-none block w-full pl-10 py-2 "
+                  placeholder="Search..."
+                />
+              </div>
+            </div>
+            {/* options */}
+            <div className="flex">
+              <ul className="flex items-center gap-4">
+                <li
+                  className={`text-sm font-semibold cursor-pointer  transition-colors duration-300 ${
+                    selected === "home" ? "text-white" : "text-slate-400"
+                  }`}
+                >
+                  <Link href="/home">
+                    <div className="flex flex-col items-center">
+                      <AiFillHome
+                        className={` text-2xl  duration-300 ${
+                          selected !== "connections" && "hover:scale-110 "
+                        }`}
+                      />
+                      <h1 className="text-xs duration-300">Home</h1>
+                      {selected === "home" && (
+                        <div className="w-full">
+                          <div className="h-1 bg-white absolute translate-y-1 scale-x-125 rounded-full">
+                            <p className="invisible text-xs">Home</p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </Link>
+                </li>
+                <li
+                  className={`text-sm font-semibold cursor-pointer  transition-colors duration-300 ${
+                    selected === "connections"
+                      ? "text-white"
+                      : "text-slate-400 "
+                  }`}
+                >
+                  <Link href="/connections">
+                    <div className="flex flex-col items-center">
+                      <HiUsers
+                        className={`text-2xl duration-300 ${
+                          selected !== "connections" && "hover:scale-110 "
+                        }`}
+                      />
+                      <h1 className="text-xs duration-300">Connections</h1>
+                      {selected === "connections" && (
+                        <div className="w-full">
+                          <div className="h-1 bg-white absolute translate-y-1 scale-x-125 rounded-full">
+                            <p className="invisible text-xs">Connections</p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </Link>
+                </li>
+              </ul>
+
+              {/* profile */}
+              <Link href="/profile">
+                <div className="flex items-center flex-col  cursor-pointer ml-10 ">
+                  <Image
+                    className="hover:scale-110 transition-all duration-300"
+                    src="/images/profile-placeholder.avif"
+                    alt="logo"
+                    width={40}
+                    height={40}
+                  />
+                </div>
+              </Link>
+            </div>
           </div>
-          <input
-            type="text"
-            id="email-adress-icon"
-            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2"
-            placeholder="Search..."
-          />
         </div>
-      </div>
-    </nav>
+        {showSearch && (
+          // search icon for mobile view
+          <div className="relative md:mr-0 block mt-5 md:hidden">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <BiSearchAlt2 className="text-white" />
+            </div>
+            <input
+              type="text"
+              id="search"
+              className="bg-slate-600 text-white sm:text-sm rounded focus:outline-none block w-full pl-10 py-2 "
+              placeholder="Search..."
+            />
+          </div>
+        )}
+      </nav>
+      {/* space for navbar */}
+      <div className="h-14" />
+      {showSearch && <div className="h-16 md:hidden" />}
+    </>
   );
 };
 

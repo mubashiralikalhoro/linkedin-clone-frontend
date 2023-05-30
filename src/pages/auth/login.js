@@ -70,7 +70,7 @@ const LoginPage = () => {
         toast.success("Login successful");
         console.log("api res", res);
 
-        setCookie(cookieKeys.JWT, res.data.jwt, {
+        setCookie(cookieKeys.JWT, res.data.data.jwt, {
           maxAge: cookieConfig.MAX_AGE,
         });
 
