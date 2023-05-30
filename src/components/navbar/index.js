@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 // icons
 import { BiSearchAlt2 } from "react-icons/bi";
 import { BsLinkedin } from "react-icons/bs";
@@ -8,11 +8,13 @@ import { AiFillHome } from "react-icons/ai";
 import { HiUsers } from "react-icons/hi";
 import { useRouter } from "next/router";
 import { MdSearchOff } from "react-icons/md";
+import UserContext from "@/context/UserContext";
 
 const Navbar = () => {
   const router = useRouter();
   const [selected, setSelected] = useState("home");
   const [showSearch, setShowSearch] = useState(false);
+  const user = useContext(UserContext);
 
   // setting current selected tab
   useEffect(() => {
@@ -120,8 +122,12 @@ const Navbar = () => {
               <Link href="/profile">
                 <div className="flex items-center flex-col  cursor-pointer ml-10 ">
                   <Image
-                    className="hover:scale-110 transition-all duration-300"
-                    src="/images/profile-placeholder.avif"
+                    className="hover:scale-110 transition-all duration-300 rounded-full"
+                    src={
+                      user?.image
+                        ? `${process.env.NEXT_PUBLIC_BASE_URL}${user.image}`
+                        : "/images/profile-placeholder.avif"
+                    }
                     alt="logo"
                     width={40}
                     height={40}
