@@ -120,15 +120,19 @@ const Navbar = () => {
 
               {/* profile */}
               <Link href="/profile">
-                <div className="flex items-center flex-col  cursor-pointer ml-10 ">
+                <div className="flex items-center flex-col  cursor-pointer  ml-3 md:ml-10 ">
                   <Image
-                    className="hover:scale-110 transition-all duration-300 rounded-full"
+                    className="hover:scale-110 transition-all duration-300 rounded-full object-cover"
                     src={
                       user?.image
                         ? `${process.env.NEXT_PUBLIC_BASE_URL}${user.image}`
                         : "/images/profile-placeholder.avif"
                     }
                     alt="logo"
+                    style={{
+                      width: 40,
+                      height: 40,
+                    }}
                     width={40}
                     height={40}
                   />

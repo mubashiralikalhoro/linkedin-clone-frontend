@@ -1,13 +1,16 @@
 import AppLayout from "@/components/layout";
-import React from "react";
+import UserCard from "@/components/profile/UserCard";
+import UserContext from "@/context/UserContext";
+
+import React, { useContext } from "react";
 
 const ProfilePage = () => {
+  const user = useContext(UserContext);
+
   return (
-    <div className="w-full pt-5">
+    <div className="w-full pt-5 px-0 md:px-4 ">
       {/*User profile cart*/}
-      <div className="w-full h-fit rounded-md bg-slate-800 px-4 pb-4">
-        Hello
-      </div>
+      <UserCard user={user} />
     </div>
   );
 };

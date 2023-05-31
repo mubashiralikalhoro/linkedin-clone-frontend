@@ -45,7 +45,12 @@ export default function App({ Component, pageProps }) {
   }, [user]);
 
   return (
-    <UserContext.Provider value={user}>
+    <UserContext.Provider
+      value={{
+        ...user,
+        setUser,
+      }}
+    >
       {load && (
         <Layout>
           <Component {...pageProps} />

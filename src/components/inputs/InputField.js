@@ -10,6 +10,7 @@ const InputField = ({
   error,
   disabled,
   className = "",
+  InputClassName = "",
 }) => {
   return (
     <div className={`${className}`}>
@@ -33,7 +34,8 @@ const InputField = ({
           type={type}
           className={`${
             error?.length > 0 ? "border-red-500" : "border-slate-300 "
-          } px-3 py-3 placeholder-slate-500 text-white focus:border-blue-500 bg-slate-800 rounded text-sm border-[1px] focus:outline-none w-full`}
+          } px-3 py-3 placeholder-slate-500 text-white focus:border-blue-500
+           bg-slate-800 rounded text-sm border-[1px] focus:outline-none w-full ${InputClassName}`}
           placeholder={placeholder}
         />
         {error?.length > 0 ? (
