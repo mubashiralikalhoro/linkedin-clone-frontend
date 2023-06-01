@@ -5,13 +5,13 @@ import Image from "next/image";
 import Link from "next/link";
 import ReactModal from "react-modal";
 import { IoClose } from "react-icons/io5";
-import axios from "axios";
 import apiEndPoints from "@/constants/apiEndpoints";
 import { getCookie } from "cookies-next";
 import cookieKeys from "@/constants/cookieKeys";
 import printLog from "@/util/printLog";
 import { toast } from "react-hot-toast";
 import LoaderComponent from "../loader/LoaderComponent";
+import api from "@/util/api";
 
 const UserCard = ({ user }) => {
   const [hover, setHover] = useState("none");
@@ -21,15 +21,12 @@ const UserCard = ({ user }) => {
 
   const handleImageDelete = () => {
     setLoading(true);
-    axios
-      .delete(
-        `${apiEndPoints.BASE_URL}${apiEndPoints.USER_ME}/images/${imageModal}`,
-        {
-          headers: {
-            Authorization: `Bearer ${getCookie(cookieKeys.JWT)}`,
-          },
-        }
-      )
+    api
+      .delete(`${apiEndPoints.USER_ME}/images/${imageModal}`, {
+        headers: {
+          Authorization: `Bearer ${getCookie(cookieKeys.JWT)}`,
+        },
+      })
       .then((res) => {
         user.setUser({
           ...res.data.data,
@@ -58,16 +55,12 @@ const UserCard = ({ user }) => {
     const formData = new FormData();
     formData.append("file", e.target.files[0]);
 
-    axios
-      .post(
-        `${apiEndPoints.BASE_URL}${apiEndPoints.USER_ME}/images/${imageModal}`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${getCookie(cookieKeys.JWT)}`,
-          },
-        }
-      )
+    api
+      .post(`${apiEndPoints.USER_ME}/images/${imageModal}`, formData, {
+        headers: {
+          Authorization: `Bearer ${getCookie(cookieKeys.JWT)}`,
+        },
+      })
       .then((res) => {
         printLog("res", res.data);
         user.setUser({

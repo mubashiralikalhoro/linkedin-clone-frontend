@@ -1,7 +1,7 @@
 import InputField from "@/components/inputs/InputField";
 import apiEndPoints from "@/constants/apiEndpoints";
 import cookieKeys, { cookieConfig } from "@/constants/cookieKeys";
-import axios from "axios";
+import api from "@/util/api";
 import { setCookie } from "cookies-next";
 import Joi from "joi";
 import Image from "next/image";
@@ -64,8 +64,8 @@ const LoginPage = () => {
       email: state.email,
       password: state.password,
     };
-    axios
-      .post(`${apiEndPoints.BASE_URL}${apiEndPoints.LOGIN}`, payload)
+    api
+      .post(`${apiEndPoints.LOGIN}`, payload)
       .then((res) => {
         toast.success("Login successful");
         console.log("api res", res);
@@ -85,7 +85,7 @@ const LoginPage = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-black">
-      <div className="w-full max-w-md">
+      <div className="w-full max-w-md mx-4">
         <form
           className="rounded-lg w-full  shadow-lg p-4 flex flex-col items-center justify-center bg-slate-800 py-8"
           onSubmit={handleSubmit}
@@ -95,7 +95,7 @@ const LoginPage = () => {
             src="/images/linkedIn-logo.png"
             alt="logo"
             width={200}
-            height={200}
+            height={50}
           />
           <InputField
             value={state.email}

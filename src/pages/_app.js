@@ -2,8 +2,8 @@ import apiEndPoints from "@/constants/apiEndpoints";
 import cookieKeys from "@/constants/cookieKeys";
 import UserContext from "@/context/UserContext";
 import "@/styles/globals.css";
+import api from "@/util/api";
 import printLog from "@/util/printLog";
-import axios from "axios";
 import { getCookie } from "cookies-next";
 import { useEffect, useState } from "react";
 import { Toaster } from "react-hot-toast";
@@ -17,8 +17,8 @@ export default function App({ Component, pageProps }) {
   useEffect(() => {
     const jwt = getCookie(cookieKeys.JWT);
     if (jwt) {
-      axios
-        .get(`${apiEndPoints.BASE_URL}${apiEndPoints.USER_ME}`, {
+      api
+        .get(`${apiEndPoints.USER_ME}`, {
           headers: {
             Authorization: `Bearer ${jwt}`,
           },

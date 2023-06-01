@@ -143,7 +143,7 @@ const Navbar = () => {
         </div>
         {showSearch && (
           // search icon for mobile view
-          <div className="relative md:mr-0 block mt-5 md:hidden">
+          <div className="relative md:mr-0 block mt-5 md:hidden w-full">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <BiSearchAlt2 className="text-white" />
             </div>

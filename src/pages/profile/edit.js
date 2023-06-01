@@ -3,9 +3,9 @@ import AppLayout from "@/components/layout";
 import apiEndPoints from "@/constants/apiEndpoints";
 import cookieKeys from "@/constants/cookieKeys";
 import UserContext from "@/context/UserContext";
+import api from "@/util/api";
 import { formateDateForInput } from "@/util/dateHelpers";
 import printLog from "@/util/printLog";
-import axios from "axios";
 import { getCookie } from "cookies-next";
 import Joi from "joi";
 import { useRouter } from "next/router";
@@ -94,8 +94,8 @@ const EditProfilePage = () => {
 
     printLog("payload", payLoad);
 
-    axios
-      .put(`${apiEndPoints.BASE_URL}${apiEndPoints.USER_ME}`, payLoad, {
+    api
+      .put(`${apiEndPoints.USER_ME}`, payLoad, {
         headers: {
           Authorization: `Bearer ${getCookie(cookieKeys.JWT)}`,
         },

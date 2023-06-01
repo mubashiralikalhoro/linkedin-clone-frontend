@@ -1,7 +1,8 @@
 import InputField from "@/components/inputs/InputField";
 import apiEndPoints from "@/constants/apiEndpoints";
 import cookieKeys, { cookieConfig } from "@/constants/cookieKeys";
-import axios from "axios";
+import api from "@/util/api";
+
 import { setCookie } from "cookies-next";
 import Joi from "joi";
 import Image from "next/image";
@@ -102,8 +103,8 @@ const SignUpPage = () => {
       username: state.username?.trim(),
       fullname: state.fullname?.trim(),
     };
-    axios
-      .post(`${apiEndPoints.BASE_URL}${apiEndPoints.SIGNUP}`, payload)
+    api
+      .post(`${apiEndPoints.SIGNUP}`, payload)
       .then((res) => {
         toast.success("Account created successfully");
         console.log("api res", res);
@@ -122,7 +123,7 @@ const SignUpPage = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-black">
-      <div className="w-full max-w-md">
+      <div className="w-full max-w-md px-4">
         <form
           className="rounded-lg w-full  shadow-lg p-4 flex flex-col items-center justify-center bg-slate-800 py-8"
           onSubmit={handleSubmit}
@@ -132,7 +133,7 @@ const SignUpPage = () => {
             src="/images/linkedIn-logo.png"
             alt="logo"
             width={200}
-            height={200}
+            height={50}
           />
           <InputField
             value={state.username}
@@ -209,14 +210,6 @@ const SignUpPage = () => {
             )}
           </div>
         </form>
-        <div className="flex text-xs right-0 bottom-0 absolute p-4">
-          developed by
-          <Link href="https://github.com/mubashiralikalhoro" target="_blank">
-            <p className=" ml-1 text-blue-500 hover:text-blue-600 transition-colors duration-300">
-              <u>Mubashir Ali Kalhoro</u>
-            </p>
-          </Link>
-        </div>
       </div>
     </div>
   );
