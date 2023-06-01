@@ -5,6 +5,8 @@ import "@/styles/globals.css";
 import api from "@/util/api";
 import printLog from "@/util/printLog";
 import { getCookie } from "cookies-next";
+import Head from "next/head";
+
 import { useEffect, useState } from "react";
 import { Toaster } from "react-hot-toast";
 
@@ -45,18 +47,27 @@ export default function App({ Component, pageProps }) {
   }, [user]);
 
   return (
-    <UserContext.Provider
-      value={{
-        ...user,
-        setUser,
-      }}
-    >
-      {load && (
-        <Layout>
-          <Component {...pageProps} />
-          <Toaster />
-        </Layout>
-      )}
-    </UserContext.Provider>
+    <>
+      <Head>
+        <title>LinkedIn</title>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+        />
+      </Head>
+      <UserContext.Provider
+        value={{
+          ...user,
+          setUser,
+        }}
+      >
+        {load && (
+          <Layout>
+            <Component {...pageProps} />
+            <Toaster />
+          </Layout>
+        )}
+      </UserContext.Provider>
+    </>
   );
 }
