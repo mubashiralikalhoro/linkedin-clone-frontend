@@ -140,7 +140,7 @@ const SignUpPage = () => {
             className="w-full"
             label="username"
             placeholder={"mubashirali"}
-            type="username"
+            type="text"
             onChange={(e) => handleChange("username", e)}
             error={errors.username}
           />
@@ -149,7 +149,7 @@ const SignUpPage = () => {
             className="w-full"
             label="Full name"
             placeholder={"Mubashir Ali"}
-            type="fullname"
+            type="text"
             onChange={(e) => handleChange("fullname", e)}
             error={errors.fullname}
           />
@@ -159,7 +159,7 @@ const SignUpPage = () => {
             className="w-full"
             label="Email"
             placeholder={"mubashiralikalhoro@gmail.com"}
-            type="email"
+            type="text"
             onChange={(e) => handleChange("email", e)}
             error={errors.email}
           />
@@ -179,7 +179,7 @@ const SignUpPage = () => {
             className="w-full"
             label="confirm Password"
             placeholder={"Confirm Password"}
-            type="confirmPassword"
+            type="password"
             onChange={(e) => handleChange("confirmPassword", e)}
             error={errors.confirmPassword}
           />

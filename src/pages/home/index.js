@@ -1,14 +1,43 @@
 import AppLayout from "@/components/layout";
 import Navbar from "@/components/navbar";
-import React from "react";
+import Post from "@/components/posts/Post";
+import apiEndPoints from "@/constants/apiEndpoints";
+import api from "@/util/api";
+import getBearerAuth from "@/util/getBearerAuth";
+import printLog from "@/util/printLog";
+import React, { useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
 
 const HomePage = () => {
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    api
+      .get(apiEndPoints.POSTS, {
+        headers: {
+          Authorization: getBearerAuth(),
+        },
+      })
+      .then((res) => {
+        printLog("posts :", res.data);
+        setPosts(res.data.data);
+      })
+      .catch((er) => {
+        let error = er?.response?.data?.error || "Unable to fetch posts!";
+        toast.error(error);
+        setTimeout(() => {
+          toast.error("Please refresh the page.");
+        }, 2000);
+      });
+  }, []);
+
   return (
-    <div>
-      <div className="bg-red-500 w-full h-screen"></div>
-      <div className="bg-white w-full h-screen"></div>
-      <div className="bg-yellow-500 w-full h-screen"></div>
-      <div className="bg-green-500 w-full h-screen"></div>
+    <div className="w-full">
+      <div className="w-full flex flex-col items-center justify-center">
+        {posts.map((item, index) => (
+          <Post key={index} post={item} />
+        ))}
+      </div>
     </div>
   );
 };

@@ -20,3 +20,12 @@ const ProfilePage = () => {
 export default ProfilePage;
 
 ProfilePage.layout = AppLayout;
+
+export const getServerSideProps = async (context) => {
+  const username = context?.query?.username;
+  return {
+    props: {
+      username,
+    },
+  };
+};

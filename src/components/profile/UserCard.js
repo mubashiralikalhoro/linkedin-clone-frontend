@@ -136,7 +136,7 @@ const UserCard = ({ user }) => {
         </div>
       </ReactModal>
 
-      <div className="w-full h-fit md:rounded-md overflow-hidden">
+      <div className="w-full h-fit rounded-md overflow-hidden">
         <div
           className=" flex justify-end "
           onMouseEnter={() => setHover("coverImage")}
