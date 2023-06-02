@@ -11,7 +11,7 @@ import { format } from "timeago.js";
 const Post = ({ post }) => {
   return (
     <div className="w-full rounded-md bg-slate-800 flex flex-col mt-4 py-2 max-w-xl">
-      <Link className="w-full " href={`/${post?.user?.username}`}>
+      <Link className="w-full " href={`/profile/${post?.user?.username}`}>
         <div className="flex mx-4 items-center cursor-pointer border-b pb-2 border-slate-600 mb-2">
           <Image
             className="rounded-full bg-slate-600"

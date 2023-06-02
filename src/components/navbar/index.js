@@ -119,7 +119,7 @@ const Navbar = () => {
               </ul>
 
               {/* profile */}
-              <Link href={`/${user.username}`}>
+              <Link href={`/profile/${user.username}`}>
                 <div className="flex items-center flex-col  cursor-pointer  ml-3 md:ml-10 ">
                   <Image
                     className="hover:scale-110 transition-all duration-300 rounded-full object-cover"
