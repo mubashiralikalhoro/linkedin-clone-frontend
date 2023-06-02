@@ -45,6 +45,8 @@ const UserCard = ({ user }) => {
   };
 
   const handleImageUpload = (e) => {
+    printLog("image :", e.target.files);
+
     if (e?.target?.files?.length === 0) return;
     if (e.target.files[0].size > 5000000) {
       toast.error("Image size should be less than 5mb");
@@ -54,6 +56,8 @@ const UserCard = ({ user }) => {
     setLoading(true);
     const formData = new FormData();
     formData.append("file", e.target.files[0]);
+
+    printLog("formData :", formData.get("file"));
 
     api
       .post(`${apiEndPoints.USER_ME}/images/${imageModal}`, formData, {
