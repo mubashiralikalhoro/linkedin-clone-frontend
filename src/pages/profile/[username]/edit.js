@@ -15,8 +15,9 @@ import { BiArrowBack } from "react-icons/bi";
 
 //  fullname, username,phone, dateOfBirth, website, about, address
 
-const EditProfilePage = () => {
+const EditProfilePage = ({ isAllowed, username }) => {
   const user = useContext(UserContext);
+  const [load, setLoad] = useState(false);
   const [state, setState] = useState({
     fullname: user.fullname,
     username: user.username,
@@ -27,6 +28,7 @@ const EditProfilePage = () => {
     website: user.website,
     about: user.about,
     address: user.address,
+    work: user.work,
   });
 
   const [errors, setErrors] = useState({
@@ -123,120 +125,171 @@ const EditProfilePage = () => {
     router.back();
   };
 
+  useEffect(() => {
+    if (isAllowed) {
+      setLoad(true);
+    } else {
+      router.replace(`/profile/${username}`);
+    }
+  }, []);
+
   return (
-    <div className="w-full min-h-full px-0 md:px-4 py-4">
-      <div className="w-full min-h-full bg-slate-800 md:rounded-md p-4">
-        <div className="mb-5 border-b border-slate-300 pb-2 flex justify-between items-center">
-          <div>
-            <div
-              onClick={goBack}
-              className="text-blue-600 hover:text-blue-700 flex items-center cursor-pointer"
-            >
-              <BiArrowBack className=" mr-2" />
-              Back
+    <>
+      {load && (
+        <div className="w-full min-h-full px-0 md:px-4 py-4">
+          <div className="w-full min-h-full bg-slate-800 md:rounded-md p-4">
+            <div className="mb-5 border-b border-slate-300 pb-2 flex justify-between items-center">
+              <div>
+                <div
+                  onClick={goBack}
+                  className="text-blue-600 hover:text-blue-700 flex items-center cursor-pointer"
+                >
+                  <BiArrowBack className=" mr-2" />
+                  Back
+                </div>
+                <h1 className="text-2xl font-bold">Edit Profile</h1>
+              </div>
+
+              <div
+                onClick={() => {
+                  if (validate()) {
+                    handleSubmit();
+                  }
+                }}
+                className="px-3 py-2 bg-blue-600 hover:bg-blue-700 font-bold rounded cursor-pointer "
+              >
+                Save
+              </div>
             </div>
-            <h1 className="text-2xl font-bold">Edit Profile</h1>
-          </div>
 
-          <div
-            onClick={() => {
-              if (validate()) {
-                handleSubmit();
-              }
-            }}
-            className="px-3 py-2 bg-blue-600 hover:bg-blue-700 font-bold rounded cursor-pointer "
-          >
-            Save
-          </div>
-        </div>
+            <div className="w-full flex flex-wrap justify-between pb-5">
+              <InputField
+                className=" w-full md:w-[49%]"
+                label="Username"
+                placeholder="Enter your username"
+                type="text"
+                name="username"
+                required
+                error={errors.username}
+                value={state.username}
+                onChange={(e) => handleChange("username", e)}
+              />
 
-        <div className="w-full flex flex-wrap justify-between pb-5">
-          <InputField
-            className=" w-full md:w-[49%]"
-            label="Username"
-            placeholder="Enter your username"
-            type="text"
-            name="username"
-            required
-            error={errors.username}
-            value={state.username}
-            onChange={(e) => handleChange("username", e)}
-          />
+              <InputField
+                className=" w-full md:w-[49%]"
+                label="Fullname"
+                placeholder="Enter your fullname"
+                type="text"
+                name="fullname"
+                required
+                error={errors.fullname}
+                value={state.fullname}
+                onChange={(e) => handleChange("fullname", e)}
+              />
 
-          <InputField
-            className=" w-full md:w-[49%]"
-            label="Fullname"
-            placeholder="Enter your fullname"
-            type="text"
-            name="fullname"
-            required
-            error={errors.fullname}
-            value={state.fullname}
-            onChange={(e) => handleChange("fullname", e)}
-          />
+              <InputField
+                className=" w-full md:w-[49%]"
+                label="Phone"
+                placeholder="Enter your phone"
+                type="number"
+                name="phone"
+                error={errors.phone}
+                value={state.phone}
+                onChange={(e) => handleChange("phone", e)}
+              />
 
-          <InputField
-            className=" w-full md:w-[49%]"
-            label="Phone"
-            placeholder="Enter your phone"
-            type="number"
-            name="phone"
-            error={errors.phone}
-            value={state.phone}
-            onChange={(e) => handleChange("phone", e)}
-          />
+              <InputField
+                className=" w-full md:w-[49%]"
+                label="Date of birth"
+                placeholder="Enter your date of birth"
+                type="date"
+                name="dateOfBirth"
+                value={state.dateOfBirth}
+                onChange={(e) => handleChange("dateOfBirth", e)}
+              />
 
-          <InputField
-            className=" w-full md:w-[49%]"
-            label="Date of birth"
-            placeholder="Enter your date of birth"
-            type="date"
-            name="dateOfBirth"
-            value={state.dateOfBirth}
-            onChange={(e) => handleChange("dateOfBirth", e)}
-          />
+              <InputField
+                className=" w-full md:w-[49%]"
+                label="Website"
+                placeholder="Enter your website"
+                type="text"
+                name="website"
+                error={errors.website}
+                value={state.website}
+                onChange={(e) => handleChange("website", e)}
+              />
 
-          <InputField
-            className=" w-full md:w-[49%]"
-            label="Website"
-            placeholder="Enter your website"
-            type="text"
-            name="website"
-            error={errors.website}
-            value={state.website}
-            onChange={(e) => handleChange("website", e)}
-          />
+              <InputField
+                className=" w-full md:w-[49%]"
+                label="Work"
+                placeholder="Enter your work experience"
+                type="text"
+                name="work"
+                value={state.work}
+                onChange={(e) => handleChange("work", e)}
+              />
+              <InputField
+                className=" w-full md:w-[49%]"
+                label="Address"
+                placeholder="Enter your address"
+                type="text"
+                name="address"
+                value={state.address}
+                onChange={(e) => handleChange("address", e)}
+              />
 
-          <InputField
-            className=" w-full md:w-[49%]"
-            label="Address"
-            placeholder="Enter your address"
-            type="text"
-            name="address"
-            value={state.address}
-            onChange={(e) => handleChange("address", e)}
-          />
-
-          <label
-            className="uppercase text-xs font-bold mb-2 flex "
-            htmlFor="grid-password"
-          >
-            About
-          </label>
-          <textarea
-            className="w-full h-32 bg-slate-800 rounded-md text-white focus:border-blue-500
+              <label
+                className="uppercase text-xs font-bold mb-2 flex "
+                htmlFor="grid-password"
+              >
+                About
+              </label>
+              <textarea
+                className="w-full h-32 bg-slate-800 rounded-md text-white focus:border-blue-500
             border-slate-300 border-[1px] focus:outline-none p-3"
-            placeholder="Enter your about"
-            name="about"
-            value={state.about}
-            onChange={(e) => handleChange("about", e)}
-          />
+                placeholder="Enter your about"
+                name="about"
+                value={state.about}
+                onChange={(e) => handleChange("about", e)}
+              />
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 };
 
 export default EditProfilePage;
 
 EditProfilePage.layout = AppLayout;
+
+export const getServerSideProps = async (context) => {
+  const jwt = context.req.cookies?.[cookieKeys.JWT];
+  const username = context?.query?.username;
+
+  let isAllowed = null;
+  try {
+    const response = await api.get(apiEndPoints.USER_ME, {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      },
+    });
+
+    printLog("user : ", response.data);
+    if (response?.data?.data.username === username) {
+      isAllowed = true;
+    }
+  } catch (er) {
+    isAllowed = false;
+  }
+
+  printLog("isAllowed", isAllowed);
+
+  return {
+    props: {
+      isAllowed,
+      username,
+    },
+  };
+};

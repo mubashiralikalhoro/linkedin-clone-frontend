@@ -13,7 +13,7 @@ import { toast } from "react-hot-toast";
 import LoaderComponent from "../loader/LoaderComponent";
 import api from "@/util/api";
 
-const UserCard = ({ user }) => {
+const UserCard = ({ user, canEdit, setContextUser }) => {
   const [hover, setHover] = useState("none");
   const [imageModal, setImageModal] = useState("none");
   const [loading, setLoading] = useState(false);
@@ -28,7 +28,7 @@ const UserCard = ({ user }) => {
         },
       })
       .then((res) => {
-        user.setUser({
+        setContextUser({
           ...res.data.data,
           setUser: user.setUser,
         });
@@ -67,11 +67,10 @@ const UserCard = ({ user }) => {
       })
       .then((res) => {
         printLog("res", res.data);
-        user.setUser({
+        setContextUser({
           ...res.data.data,
           setUser: user.setUser,
         });
-
         toast.success("Image uploaded");
       })
       .catch((err) => {
@@ -141,23 +140,25 @@ const UserCard = ({ user }) => {
       </ReactModal>
 
       <div className="w-full h-fit rounded-md overflow-hidden">
-        <div
-          className=" flex justify-end "
-          onMouseEnter={() => setHover("coverImage")}
-          onMouseLeave={() => setHover("none")}
-        >
-          {
-            // edit profile image
-            hover === "coverImage" && (
-              <div className="flex items-center justify-center absolute p-4">
-                <MdOutlineModeEditOutline
-                  className="text-white text-2xl  cursor-pointer"
-                  onClick={() => setImageModal("coverImage")}
-                />
-              </div>
-            )
-          }
-        </div>
+        {canEdit && (
+          <div
+            className=" flex justify-end "
+            onMouseEnter={() => setHover("coverImage")}
+            onMouseLeave={() => setHover("none")}
+          >
+            {
+              // edit profile image
+              hover === "coverImage" && (
+                <div className="flex items-center justify-center absolute p-4">
+                  <MdOutlineModeEditOutline
+                    className="text-white text-2xl  cursor-pointer"
+                    onClick={() => setImageModal("coverImage")}
+                  />
+                </div>
+              )
+            }
+          </div>
+        )}
         <div
           className="w-full bg-slate-400 bg-cover bg-center bg-no-repeat flex items-end"
           style={{
@@ -178,21 +179,23 @@ const UserCard = ({ user }) => {
             onMouseLeave={() => setHover("none")}
             onClick={() => setImageModal("profile")}
           >
-            <div>
-              <div
-                className={`absolute bg-slate-800  w-full h-full duration-300 ${
-                  hover === "profile" ? "opacity-50" : "opacity-0"
-                }`}
-              />
-              {
-                // edit profile image
-                hover === "profile" && (
-                  <div className="absolute w-full h-full flex items-center justify-center">
-                    <MdOutlineModeEditOutline className="text-white text-2xl " />
-                  </div>
-                )
-              }
-            </div>
+            {canEdit && (
+              <div>
+                <div
+                  className={`absolute bg-slate-800  w-full h-full duration-300 ${
+                    hover === "profile" ? "opacity-50" : "opacity-0"
+                  }`}
+                />
+                {
+                  // edit profile image
+                  hover === "profile" && (
+                    <div className="absolute w-full h-full flex items-center justify-center">
+                      <MdOutlineModeEditOutline className="text-white text-2xl " />
+                    </div>
+                  )
+                }
+              </div>
+            )}
             <Image
               src={
                 user?.image
@@ -217,14 +220,20 @@ const UserCard = ({ user }) => {
             }}
             className="flex justify-end items-center mb-2"
           >
-            <Link href="/profile/edit">
-              <MdOutlineModeEditOutline className="text-white text-2xl mr-5 cursor-pointer hover:scale-110 duration-300" />
-            </Link>
+            {canEdit && (
+              <Link href={`/profile/${user?.username}/edit`}>
+                <MdOutlineModeEditOutline className="text-white text-2xl mr-5 cursor-pointer hover:scale-110 duration-300" />
+              </Link>
+            )}
           </div>
 
           {
             // fullname
             <div className="font-bold text-xl">{user.fullname}</div>
+          }
+          {
+            // work
+            user?.address && <p className="text-gray-400">{user.work}</p>
           }
           {
             // address

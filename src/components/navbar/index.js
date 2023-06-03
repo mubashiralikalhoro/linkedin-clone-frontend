@@ -9,11 +9,14 @@ import { HiUsers } from "react-icons/hi";
 import { useRouter } from "next/router";
 import { MdSearchOff } from "react-icons/md";
 import UserContext from "@/context/UserContext";
+import { deleteCookie } from "cookies-next";
+import cookieKeys from "@/constants/cookieKeys";
 
 const Navbar = () => {
   const router = useRouter();
   const [selected, setSelected] = useState("home");
   const [showSearch, setShowSearch] = useState(false);
+  const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const user = useContext(UserContext);
 
   // setting current selected tab
@@ -119,25 +122,56 @@ const Navbar = () => {
               </ul>
 
               {/* profile */}
-              <Link href={`/profile/${user.username}`}>
-                <div className="flex items-center flex-col  cursor-pointer  ml-3 md:ml-10 ">
-                  <Image
-                    className="hover:scale-110 transition-all duration-300 rounded-full object-cover"
-                    src={
-                      user?.image
-                        ? `${process.env.NEXT_PUBLIC_BASE_URL}${user.image}`
-                        : "/images/profile-placeholder.avif"
-                    }
-                    alt="logo"
-                    style={{
-                      width: 40,
-                      height: 40,
-                    }}
-                    width={40}
-                    height={40}
-                  />
-                </div>
-              </Link>
+
+              <div className=" cursor-pointer  ml-3 md:ml-10 ">
+                <Image
+                  onClick={() => setShowProfileDropdown(!showProfileDropdown)}
+                  className="hover:scale-110 transition-all duration-300 rounded-full object-cover"
+                  src={
+                    user?.image
+                      ? `${process.env.NEXT_PUBLIC_BASE_URL}${user.image}`
+                      : "/images/profile-placeholder.avif"
+                  }
+                  alt="logo"
+                  style={{
+                    width: 40,
+                    height: 40,
+                  }}
+                  width={40}
+                  height={40}
+                />
+                {showProfileDropdown && (
+                  <div className="z-50">
+                    <div
+                      className="w-[100px]  bg-slate-800 rounded absolute -translate-x-[60px] translate-y-[15px] overflow-hidden "
+                      style={{
+                        zIndex: 1000,
+                      }}
+                    >
+                      <div
+                        onClick={() => {
+                          setShowProfileDropdown(false);
+                          router.push(`/profile/${user.username}`);
+                        }}
+                        className="w-full py-2 cursor-pointer hover:bg-slate-600  px-2 "
+                      >
+                        Profile
+                      </div>
+
+                      <div
+                        onClick={() => {
+                          // logging out
+                          deleteCookie(cookieKeys.JWT);
+                          router.reload();
+                        }}
+                        className="w-full py-2 cursor-pointer hover:bg-slate-600  px-2 text-red-500 "
+                      >
+                        Log out
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
