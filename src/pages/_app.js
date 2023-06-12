@@ -6,7 +6,7 @@ import api from "@/util/api";
 import printLog from "@/util/printLog";
 import { getCookie } from "cookies-next";
 import Head from "next/head";
-
+import { BsLinkedin } from "react-icons/bs";
 import { useEffect, useState } from "react";
 import { Toaster } from "react-hot-toast";
 
@@ -61,11 +61,17 @@ export default function App({ Component, pageProps }) {
           setUser,
         }}
       >
-        {load && (
+        {load ? (
+          // main app
           <Layout>
             <Component {...pageProps} />
             <Toaster />
           </Layout>
+        ) : (
+          // SplashScreen
+          <div className="w-screen h-screen items-center flex justify-center">
+            <BsLinkedin className="text-white text-4xl" />
+          </div>
         )}
       </UserContext.Provider>
     </>

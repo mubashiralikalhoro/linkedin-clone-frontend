@@ -1,7 +1,9 @@
 import AppLayout from "@/components/layout";
 import Navbar from "@/components/navbar";
 import AddPost from "@/components/posts/AddPost";
+import AddPostComponent from "@/components/posts/AddPostComponent";
 import Post from "@/components/posts/Post";
+import PostPlaceHolder from "@/components/posts/PostPlaceHolder";
 import apiEndPoints from "@/constants/apiEndpoints";
 import UserContext from "@/context/UserContext";
 import api from "@/util/api";
@@ -13,7 +15,7 @@ import { toast } from "react-hot-toast";
 import ReactModal from "react-modal";
 
 const HomePage = () => {
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState(null);
   const [addNewPostModal, setAddNewPostModal] = useState(false);
   const user = useContext(UserContext);
 
@@ -41,28 +43,25 @@ const HomePage = () => {
     <>
       <div className="w-full">
         <div className="w-full flex flex-col items-center justify-center">
-          <div
-            className="w-full max-w-xl rounded-md bg-slate-800 mt-4 px-4 py-2 flex items-center"
+          {/* add post */}
+          <AddPostComponent
+            user={user}
             onClick={() => setAddNewPostModal(true)}
-          >
-            <Image
-              className="rounded-full bg-slate-600"
-              alt="user"
-              height={50}
-              width={50}
-              src={
-                user?.image
-                  ? `${apiEndPoints.BASE_URL}${user.image}`
-                  : "/images/profile-placeholder.avif"
-              }
-            />
-            <div className="bg-inherit border border-slate-300 px-4 py-2 rounded-full ml-3 flex flex-1 text-slate-500">
-              {"What's on your mind?"}
-            </div>
-          </div>
-          {posts.map((item, index) => (
-            <Post key={index} post={item} />
-          ))}
+          />
+
+          {posts !== null ? (
+            posts.length == 0 ? (
+              <div className="mt-5 py-3 bg-slate-800 rounded-md flex items-center justify-center max-w-xl w-full mx-auto">
+                No Posts
+              </div>
+            ) : (
+              // posts
+              posts.map((item, index) => <Post key={index} post={item} />)
+            )
+          ) : (
+            // posts placeholder
+            <PostPlaceHolder />
+          )}
         </div>
       </div>
       {/*Modal*/}
