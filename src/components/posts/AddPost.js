@@ -72,11 +72,7 @@ const AddPost = ({ setModal }) => {
           }}
         />
       </div>
-      <InputField
-        placeholder={"What's on your mind"}
-        value={state.title}
-        onChange={(e) => handleChange("title", e)}
-      />
+      <InputField placeholder={"What's on your mind"} value={state.title} onChange={(e) => handleChange("title", e)} />
 
       <textarea
         className="w-full h-32 bg-slate-800 rounded-md text-white focus:border-blue-500 mb-3

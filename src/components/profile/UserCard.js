@@ -93,19 +93,14 @@ const UserCard = ({ user, canEdit, setContextUser }) => {
         className="w-full h-full flex items-center justify-center"
         overlayClassName="fixed top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 z-50"
       >
-        <div
-          className={`w-[200px] flex flex-col items-center h-fit p-2 bg-slate-800 rounded-md font-bold`}
-        >
+        <div className={`w-[200px] flex flex-col items-center h-fit p-2 bg-slate-800 rounded-md font-bold`}>
           {loading ? (
             <LoaderComponent />
           ) : (
             <>
               <div className="w-full flex justify-end">
                 <div className="absolute rounded-full bg-white text-black p-1 -translate-y-4 translate-x-4">
-                  <IoClose
-                    onClick={() => setImageModal("none")}
-                    className=" cursor-pointer"
-                  />
+                  <IoClose onClick={() => setImageModal("none")} className=" cursor-pointer" />
                 </div>
               </div>
               <div className="p-2  cursor-pointer hover:underline">
@@ -125,10 +120,7 @@ const UserCard = ({ user, canEdit, setContextUser }) => {
                 (imageModal === "profile" ? user.image : user.coverImage) && (
                   <>
                     <div className="h-[1px] w-full bg-slate-300" />
-                    <div
-                      onClick={handleImageDelete}
-                      className="p-2 text-red-500 cursor-pointer hover:underline"
-                    >
+                    <div onClick={handleImageDelete} className="p-2 text-red-500 cursor-pointer hover:underline">
                       Delete
                     </div>
                   </>
@@ -162,9 +154,7 @@ const UserCard = ({ user, canEdit, setContextUser }) => {
         <div
           className="w-full bg-slate-400 bg-cover bg-center bg-no-repeat flex items-end"
           style={{
-            backgroundImage: user?.coverImage
-              ? `url(${process.env.NEXT_PUBLIC_BASE_URL}${user.coverImage})`
-              : null,
+            backgroundImage: user?.coverImage ? `url(${process.env.NEXT_PUBLIC_BASE_URL}${user.coverImage})` : null,
             height: (size.width > 1150 ? 1150 : size.width) * 0.3,
           }}
           onMouseEnter={() => setHover("coverImage")}
@@ -174,10 +164,18 @@ const UserCard = ({ user, canEdit, setContextUser }) => {
             style={{
               transform: "translateY(30%)",
             }}
-            className="rounded-full overflow-hidden ml-5 md:ml-8 lg:ml-10 border-[3px] md:border-[5px]  border-slate-800 cursor-pointer"
-            onMouseEnter={() => setHover("profile")}
-            onMouseLeave={() => setHover("none")}
-            onClick={() => setImageModal("profile")}
+            className={`rounded-full overflow-hidden ml-5 md:ml-8 lg:ml-10 border-[3px] md:border-[5px]  border-slate-800 ${
+              canEdit && "cursor-pointer"
+            }`}
+            onMouseEnter={() => {
+              if (canEdit) setHover("profile");
+            }}
+            onMouseLeave={() => {
+              if (canEdit) setHover("none");
+            }}
+            onClick={() => {
+              if (canEdit) setImageModal("profile");
+            }}
           >
             {canEdit && (
               <div>
@@ -198,9 +196,7 @@ const UserCard = ({ user, canEdit, setContextUser }) => {
             )}
             <Image
               src={
-                user?.image
-                  ? `${process.env.NEXT_PUBLIC_BASE_URL}${user.image}`
-                  : "/images/profile-placeholder.avif"
+                user?.image ? `${process.env.NEXT_PUBLIC_BASE_URL}${user.image}` : "/images/profile-placeholder.avif"
               }
               style={{
                 height: (size.width > 1150 ? 1150 : size.width) * 0.2,
@@ -247,9 +243,7 @@ const UserCard = ({ user, canEdit, setContextUser }) => {
             // website
             user?.website && (
               <Link href={user.website} target="_blank">
-                <p className="text-blue-400 hover:underline cursor-pointer">
-                  {user.website}
-                </p>
+                <p className="text-blue-400 hover:underline cursor-pointer">{user.website}</p>
               </Link>
             )
           }

@@ -42,12 +42,9 @@ const HomePage = () => {
   return (
     <>
       <div className="w-full">
-        <div className="w-full flex flex-col items-center justify-center">
+        <div className="w-full flex flex-col items-center justify-center pb-20">
           {/* add post */}
-          <AddPostComponent
-            user={user}
-            onClick={() => setAddNewPostModal(true)}
-          />
+          <AddPostComponent user={user} onClick={() => setAddNewPostModal(true)} />
 
           {posts !== null ? (
             posts.length == 0 ? (
@@ -56,7 +53,7 @@ const HomePage = () => {
               </div>
             ) : (
               // posts
-              posts.map((item, index) => <Post key={index} post={item} />)
+              posts.map((item, index) => <Post key={index} post={item} setPosts={setPosts} />)
             )
           ) : (
             // posts placeholder
@@ -72,9 +69,7 @@ const HomePage = () => {
         className="w-full h-full flex items-center justify-center"
         overlayClassName="fixed top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 z-50"
       >
-        <div
-          className={`w-full max-w-xl flex flex-col items-center h-fit bg-slate-800 rounded-md`}
-        >
+        <div className={`w-full max-w-xl flex flex-col items-center h-fit bg-slate-800 rounded-md`}>
           <AddPost setModal={setAddNewPostModal} />
         </div>
       </ReactModal>
