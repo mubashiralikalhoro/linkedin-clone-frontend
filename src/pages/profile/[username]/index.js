@@ -1,5 +1,6 @@
 import AppLayout from "@/components/layout";
 import AboutCard from "@/components/profile/AboutCard";
+import SkillsCard from "@/components/profile/SkillsCard";
 import UserCard from "@/components/profile/UserCard";
 import apiEndPoints from "@/constants/apiEndpoints";
 import cookieKeys from "@/constants/cookieKeys";
@@ -15,7 +16,11 @@ const ProfilePage = ({ userFromServer, canEdit }) => {
   const [user, setUser] = useState(userFromServer);
 
   useEffect(() => {
-    if (canEdit) setUser(contextUser);
+    if (canEdit)
+      setUser({
+        ...contextUser,
+        skills: userFromServer.skills,
+      });
   }, [contextUser]);
 
   useEffect(() => {
@@ -31,18 +36,12 @@ const ProfilePage = ({ userFromServer, canEdit }) => {
       {load === "user" ? (
         <div className="w-full pt-5 px-0 md:px-4 ">
           {/*User profile cart*/}
-          <UserCard
-            user={user}
-            canEdit={canEdit}
-            setUser={setUser}
-            setContextUser={contextUser?.setUser}
-          />
+          <UserCard user={user} canEdit={canEdit} setUser={setUser} setContextUser={contextUser?.setUser} />
           {user?.about && <AboutCard user={user} />}
+          {user?.skills?.length > 0 && <SkillsCard skills={user.skills} />}
         </div>
       ) : (
-        <div className="w-full pt-5 font-bold flex justify-center items-center">
-          User Not Found
-        </div>
+        <div className="w-full pt-5 font-bold flex justify-center items-center">User Not Found</div>
       )}
     </>
   );
@@ -72,21 +71,35 @@ export const getServerSideProps = async (context) => {
       user = response.data.data;
       canEdit = true;
     }
-
     // other user
     else {
-      const otherUserResponse = await api.get(
-        `${apiEndPoints.USER}/${username}`,
-        {
+      const otherUserResponse = await api.get(`${apiEndPoints.USER}/${username}`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      });
+
+      user = otherUserResponse?.data?.data;
+      if (user?.id) {
+        const followResponse = await api.get(`${apiEndPoints.CONNECTIONS}/status?userId=${user.id}`, {
           headers: {
             Authorization: `Bearer ${jwt}`,
           },
-        }
-      );
-      printLog("response : ", otherUserResponse?.data);
+        });
 
-      user = otherUserResponse?.data?.data;
+        user.connectionWithMe = followResponse?.data?.data;
+      }
     }
+
+    const skillsResponse = await api.get(`${apiEndPoints.SKILLS}/user/${user.id}`, {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      },
+    });
+
+    printLog("skillsResponse : ", skillsResponse?.data);
+
+    user.skills = skillsResponse?.data?.data;
   } catch (er) {
     printLog("api error :", er?.response?.data);
     user = null;

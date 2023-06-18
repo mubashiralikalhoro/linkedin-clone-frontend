@@ -5,6 +5,8 @@ const apiEndPoints = {
   LOGIN: "/api/auth/login",
   SIGNUP: "/api/auth/signup",
   POSTS: "/api/posts",
+  SKILLS: "/api/skills",
+  CONNECTIONS: "/api/connections",
 };
 
 export default apiEndPoints;

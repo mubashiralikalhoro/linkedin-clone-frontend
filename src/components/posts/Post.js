@@ -111,7 +111,6 @@ const Post = ({ post, setPosts }) => {
       .then((res) => {
         console.log("commented successfully :", res.data);
         setComment("");
-
         _loadComments();
       })
       .catch((err) => {

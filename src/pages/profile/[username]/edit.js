@@ -1,10 +1,12 @@
 import InputField from "@/components/inputs/InputField";
+import MultiSelection from "@/components/inputs/MultiSelection";
 import AppLayout from "@/components/layout";
 import apiEndPoints from "@/constants/apiEndpoints";
 import cookieKeys from "@/constants/cookieKeys";
 import UserContext from "@/context/UserContext";
 import api from "@/util/api";
 import { formateDateForInput } from "@/util/dateHelpers";
+import getBearerAuth from "@/util/getBearerAuth";
 import printLog from "@/util/printLog";
 import { getCookie } from "cookies-next";
 import Joi from "joi";
@@ -15,20 +17,21 @@ import { BiArrowBack } from "react-icons/bi";
 
 //  fullname, username,phone, dateOfBirth, website, about, address
 
-const EditProfilePage = ({ isAllowed, username }) => {
+const EditProfilePage = ({ isAllowed, username, userSkills }) => {
   const user = useContext(UserContext);
   const [load, setLoad] = useState(false);
+  const [skills, setSkills] = useState([]);
+  const [skillsFilter, setSkillsFilter] = useState("");
   const [state, setState] = useState({
     fullname: user.fullname,
     username: user.username,
     phone: user.phone,
-    dateOfBirth: user?.dateOfBirth
-      ? formateDateForInput(user.dateOfBirth)
-      : null,
+    dateOfBirth: user?.dateOfBirth ? formateDateForInput(user.dateOfBirth) : null,
     website: user.website,
     about: user.about,
     address: user.address,
     work: user.work,
+    skills: userSkills,
   });
 
   const [errors, setErrors] = useState({
@@ -89,7 +92,9 @@ const EditProfilePage = ({ isAllowed, username }) => {
     const payLoad = {};
 
     Object.keys(state).forEach((key) => {
-      if (state[key] !== user[key]) {
+      if (key === "skills") {
+        payLoad.skills = state.skills.map((item) => item.id);
+      } else if (state[key] !== user[key]) {
         payLoad[key] = state[key];
       }
     });
@@ -120,6 +125,21 @@ const EditProfilePage = ({ isAllowed, username }) => {
       });
   };
 
+  const _getSkills = () => {
+    api
+      .get(apiEndPoints.SKILLS, {
+        headers: {
+          Authorization: getBearerAuth(),
+        },
+      })
+      .then((res) => {
+        setSkills(res.data.data);
+      })
+      .catch((er) => {
+        printLog("error get skill :", er);
+      });
+  };
+
   const router = useRouter();
   const goBack = () => {
     router.back();
@@ -127,6 +147,7 @@ const EditProfilePage = ({ isAllowed, username }) => {
 
   useEffect(() => {
     if (isAllowed) {
+      _getSkills();
       setLoad(true);
     } else {
       router.replace(`/profile/${username}`);
@@ -140,10 +161,7 @@ const EditProfilePage = ({ isAllowed, username }) => {
           <div className="w-full min-h-full bg-slate-800 md:rounded-md p-4">
             <div className="mb-5 border-b border-slate-300 pb-2 flex justify-between items-center">
               <div>
-                <div
-                  onClick={goBack}
-                  className="text-blue-600 hover:text-blue-700 flex items-center cursor-pointer"
-                >
+                <div onClick={goBack} className="text-blue-600 hover:text-blue-700 flex items-center cursor-pointer">
                   <BiArrowBack className=" mr-2" />
                   Back
                 </div>
@@ -238,10 +256,31 @@ const EditProfilePage = ({ isAllowed, username }) => {
                 onChange={(e) => handleChange("address", e)}
               />
 
-              <label
-                className="uppercase text-xs font-bold mb-2 flex "
-                htmlFor="grid-password"
-              >
+              <MultiSelection
+                className=" w-full md:w-[49%]"
+                label="Skills"
+                placeholder="Enter your skills"
+                name="skills"
+                value={state.skills}
+                options={skills.filter((item) => item.name.toLowerCase().includes(skillsFilter.toLowerCase()))}
+                onAdd={(item) => {
+                  setState({
+                    ...state,
+                    skills: [...state.skills, item],
+                  });
+                }}
+                onRemove={(item) => {
+                  setState({
+                    ...state,
+                    skills: state.skills.filter((skill) => skill.id !== item.id),
+                  });
+                }}
+                onChange={(e) => {
+                  setSkillsFilter(e.target.value);
+                }}
+              />
+
+              <label className="uppercase text-xs font-bold mb-2 flex " htmlFor="grid-password">
                 About
               </label>
               <textarea
@@ -267,6 +306,7 @@ EditProfilePage.layout = AppLayout;
 export const getServerSideProps = async (context) => {
   const jwt = context.req.cookies?.[cookieKeys.JWT];
   const username = context?.query?.username;
+  let skills = [];
 
   let isAllowed = null;
   try {
@@ -279,6 +319,13 @@ export const getServerSideProps = async (context) => {
     printLog("user : ", response.data);
     if (response?.data?.data.username === username) {
       isAllowed = true;
+      const skillsResponse = await api.get(`${apiEndPoints.SKILLS}/user/me`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      });
+
+      skills = skillsResponse?.data?.data;
     }
   } catch (er) {
     isAllowed = false;
@@ -290,6 +337,7 @@ export const getServerSideProps = async (context) => {
     props: {
       isAllowed,
       username,
+      userSkills: skills,
     },
   };
 };

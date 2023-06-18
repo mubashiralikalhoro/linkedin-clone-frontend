@@ -12,8 +12,9 @@ import printLog from "@/util/printLog";
 import { toast } from "react-hot-toast";
 import LoaderComponent from "../loader/LoaderComponent";
 import api from "@/util/api";
+import Connection from "./Connection";
 
-const UserCard = ({ user, canEdit, setContextUser }) => {
+const UserCard = ({ user, canEdit, setContextUser, setUser }) => {
   const [hover, setHover] = useState("none");
   const [imageModal, setImageModal] = useState("none");
   const [loading, setLoading] = useState(false);
@@ -235,10 +236,10 @@ const UserCard = ({ user, canEdit, setContextUser }) => {
             // address
             user?.address && <p className="text-gray-400">{user.address}</p>
           }
-          {
+          {user?.connections > 0 && (
             // connections
-            <p className="text-blue-400">{`${5} connections`}</p>
-          }
+            <p className="text-blue-400">{`${user.connections} connection${user.connections !== 1 ? "s" : ""}`}</p>
+          )}
           {
             // website
             user?.website && (
@@ -247,6 +248,7 @@ const UserCard = ({ user, canEdit, setContextUser }) => {
               </Link>
             )
           }
+          {user?.connectionWithMe?.status && <Connection user={user} />}
         </div>
       </div>
     </>
