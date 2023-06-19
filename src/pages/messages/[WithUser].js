@@ -13,6 +13,7 @@ import UserContext from "@/context/UserContext";
 
 const ChatWithUserPage = ({ chat, totalMessages, chatWith }) => {
   const user = useContext(UserContext);
+
   const [messages, setMessages] = useState(chat);
   const [message, setMessage] = useState("");
   const scrollRef = useRef(null);
@@ -62,7 +63,14 @@ const ChatWithUserPage = ({ chat, totalMessages, chatWith }) => {
       })
       .then((res) => {
         printLog("messages from api", res.data);
-        setMessages(res.data.data);
+        if (res.data.data.length !== messages.length) {
+          setMessages((prev) => {
+            return res.data.data;
+          });
+          setTimeout(() => {
+            scrollToBottom("smooth");
+          }, 10);
+        }
       })
       .catch((err) => {
         printLog("err", err);
