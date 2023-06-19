@@ -11,12 +11,17 @@ import { MdSearchOff } from "react-icons/md";
 import UserContext from "@/context/UserContext";
 import { deleteCookie } from "cookies-next";
 import cookieKeys from "@/constants/cookieKeys";
+import api from "@/util/api";
+import apiEndPoints from "@/constants/apiEndpoints";
+import getBearerAuth from "@/util/getBearerAuth";
+import printLog from "@/util/printLog";
 
 const Navbar = () => {
   const router = useRouter();
   const [selected, setSelected] = useState("home");
   const [showSearch, setShowSearch] = useState(false);
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
+  const [results, setResults] = useState([]);
   const user = useContext(UserContext);
 
   // setting current selected tab
@@ -32,7 +37,24 @@ const Navbar = () => {
     }
   }, [router.pathname]);
 
-  const handleSearch = (e) => {};
+  const handleSearch = (text) => {
+    if (text.length === 0) {
+      setResults([]);
+      return;
+    }
+
+    // fetch results
+    api
+      .get(`${apiEndPoints.USER}?fullname=${text}`, {
+        headers: {
+          Authorization: getBearerAuth(),
+        },
+      })
+      .then((res) => {
+        printLog(res.data.data);
+        setResults(res.data.data);
+      });
+  };
 
   return (
     <>
@@ -58,16 +80,66 @@ const Navbar = () => {
               </div>
 
               {/* search bar */}
-              <div className="relative md:mr-0 md:block md:w-[300px] hidden">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <BiSearchAlt2 className="text-white" />
+              <div className="relative">
+                <div className="relative md:mr-0 md:block md:w-[300px] hidden">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <BiSearchAlt2 className="text-white" />
+                  </div>
+                  <input
+                    type="text"
+                    id="search"
+                    className="bg-slate-600 text-white sm:text-sm rounded focus:outline-none block w-full pl-10 py-2 "
+                    placeholder="Search..."
+                    onChange={(e) => handleSearch(e.target.value)}
+                  />
                 </div>
-                <input
-                  type="text"
-                  id="search"
-                  className="bg-slate-600 text-white sm:text-sm rounded focus:outline-none block w-full pl-10 py-2 "
-                  placeholder="Search..."
-                />
+                {results?.length !== 0 && (
+                  <div className="w-full max-h-56 overflow-y-scroll absolute bg-slate-800 p-2 rounded-b-md">
+                    {
+                      // search results
+
+                      results?.map((user, index) => (
+                        <div
+                          key={index}
+                          className="w-full py-2 bg-slate-600 rounded-md text-white mt-2"
+                        >
+                          <div
+                            className="w-full"
+                            onClick={() => {
+                              setResults([]);
+                              setShowSearch(false);
+                              router.replace(`/profile/${user.username}`);
+                            }}
+                          >
+                            <div className="flex mx-4 items-center cursor-pointer">
+                              <Image
+                                className="rounded-full bg-slate-600 h-12 w-12"
+                                alt="user"
+                                height={50}
+                                width={50}
+                                src={
+                                  user?.image
+                                    ? `${apiEndPoints.BASE_URL}${user.image}`
+                                    : "/images/profile-placeholder.avif"
+                                }
+                              />
+                              <div className="ml-3 w-full flex items-center justify-between">
+                                <div>
+                                  <p className="font-bold text-sm md:text-base">{user?.fullname}</p>
+                                  {user?.work && (
+                                    <p className="text-slate-500 text-xs md:text-sm">
+                                      {user?.work}
+                                    </p>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))
+                    }
+                  </div>
+                )}
               </div>
             </div>
             {/* options */}
@@ -200,16 +272,22 @@ const Navbar = () => {
         </div>
         {showSearch && (
           // search icon for mobile view
-          <div className="relative md:mr-0 block mt-5 md:hidden w-full">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <BiSearchAlt2 className="text-white" />
+
+          <div className="relative w-full">
+            <div className="md:mr-0 block mt-5 md:hidden w-full relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <BiSearchAlt2 className="text-white" />
+              </div>
+              <input
+                type="text"
+                id="search"
+                className="bg-slate-600 text-white sm:text-sm rounded focus:outline-none block w-full pl-10 py-2 "
+                placeholder="Search..."
+                onChange={(e) => {
+                  handleSearch(e.target.value);
+                }}
+              />
             </div>
-            <input
-              type="text"
-              id="search"
-              className="bg-slate-600 text-white sm:text-sm rounded focus:outline-none block w-full pl-10 py-2 "
-              placeholder="Search..."
-            />
           </div>
         )}
       </nav>

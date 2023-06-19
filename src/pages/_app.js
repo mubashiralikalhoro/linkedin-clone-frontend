@@ -8,7 +8,7 @@ import { getCookie } from "cookies-next";
 import Head from "next/head";
 import { BsLinkedin } from "react-icons/bs";
 import { useEffect, useState } from "react";
-import { LoaderIcon, Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 
 export default function App({ Component, pageProps }) {
   const Layout = Component.layout || (({ children }) => <>{children}</>);
