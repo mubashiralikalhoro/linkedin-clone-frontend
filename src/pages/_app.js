@@ -8,7 +8,7 @@ import { getCookie } from "cookies-next";
 import Head from "next/head";
 import { BsLinkedin } from "react-icons/bs";
 import { useEffect, useState } from "react";
-import { Toaster } from "react-hot-toast";
+import { LoaderIcon, Toaster } from "react-hot-toast";
 
 export default function App({ Component, pageProps }) {
   const Layout = Component.layout || (({ children }) => <>{children}</>);
@@ -50,7 +50,10 @@ export default function App({ Component, pageProps }) {
     <>
       <Head>
         <title>LinkedIn</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+        />
       </Head>
       <UserContext.Provider
         value={{
@@ -67,7 +70,7 @@ export default function App({ Component, pageProps }) {
         ) : (
           // SplashScreen
           <div className="w-screen h-screen items-center flex justify-center">
-            <BsLinkedin className="text-white text-4xl" />
+            <BsLinkedin className="text-white text-[50px] animate-pulse" />
           </div>
         )}
       </UserContext.Provider>
