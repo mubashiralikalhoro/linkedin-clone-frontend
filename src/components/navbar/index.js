@@ -15,6 +15,7 @@ import api from "@/util/api";
 import apiEndPoints from "@/constants/apiEndpoints";
 import getBearerAuth from "@/util/getBearerAuth";
 import printLog from "@/util/printLog";
+import useWindowSize from "@/hooks/useWindowSize";
 
 const Navbar = () => {
   const router = useRouter();
@@ -23,6 +24,7 @@ const Navbar = () => {
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [results, setResults] = useState([]);
   const user = useContext(UserContext);
+  const size = useWindowSize();
 
   // setting current selected tab
   useEffect(() => {
@@ -93,7 +95,7 @@ const Navbar = () => {
                     onChange={(e) => handleSearch(e.target.value)}
                   />
                 </div>
-                {results?.length !== 0 && (
+                {results?.length !== 0 && !size.isMobile && (
                   <div className="w-full max-h-56 overflow-y-scroll absolute bg-slate-800 p-2 rounded-b-md">
                     {
                       // search results
@@ -272,7 +274,6 @@ const Navbar = () => {
         </div>
         {showSearch && (
           // search icon for mobile view
-
           <div className="relative w-full">
             <div className="md:mr-0 block mt-5 md:hidden w-full relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -288,6 +289,50 @@ const Navbar = () => {
                 }}
               />
             </div>
+            {results?.length !== 0 && size.isMobile && (
+              <div className="w-full max-h-56 overflow-y-scroll absolute bg-slate-800 p-2 rounded-b-md">
+                {
+                  // search results
+                  results?.map((user, index) => (
+                    <div
+                      key={index}
+                      className="w-full py-2 bg-slate-600 rounded-md text-white mt-2"
+                    >
+                      <div
+                        className="w-full"
+                        onClick={() => {
+                          setResults([]);
+                          setShowSearch(false);
+                          router.replace(`/profile/${user.username}`);
+                        }}
+                      >
+                        <div className="flex mx-4 items-center cursor-pointer">
+                          <Image
+                            className="rounded-full bg-slate-600 h-12 w-12"
+                            alt="user"
+                            height={50}
+                            width={50}
+                            src={
+                              user?.image
+                                ? `${apiEndPoints.BASE_URL}${user.image}`
+                                : "/images/profile-placeholder.avif"
+                            }
+                          />
+                          <div className="ml-3 w-full flex items-center justify-between">
+                            <div>
+                              <p className="font-bold text-sm md:text-base">{user?.fullname}</p>
+                              {user?.work && (
+                                <p className="text-slate-500 text-xs md:text-sm">{user?.work}</p>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                }
+              </div>
+            )}
           </div>
         )}
       </nav>
