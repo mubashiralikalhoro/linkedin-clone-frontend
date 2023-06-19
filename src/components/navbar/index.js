@@ -4,7 +4,7 @@ import React, { useContext, useEffect, useState } from "react";
 // icons
 import { BiSearchAlt2 } from "react-icons/bi";
 import { BsLinkedin } from "react-icons/bs";
-import { AiFillHome } from "react-icons/ai";
+import { AiFillHome, AiFillMessage } from "react-icons/ai";
 import { HiUsers } from "react-icons/hi";
 import { useRouter } from "next/router";
 import { MdSearchOff } from "react-icons/md";
@@ -27,6 +27,8 @@ const Navbar = () => {
       setSelected("profile");
     } else if (router.pathname.includes("/connections")) {
       setSelected("connections");
+    } else if (router.pathname.includes("/messages")) {
+      setSelected("messages");
     }
   }, [router.pathname]);
 
@@ -34,7 +36,7 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="border-gray-200 fixed w-full bg-slate-800 p-2 px-4 flex flex-col items-center">
+      <nav className="border-gray-200 fixed w-full bg-slate-800 p-2 px-4 flex flex-col items-center z-[9999]">
         <div className="max-w-6xl w-full">
           <div className="w-full  mx-auto flex flex-wrap items-center justify-between">
             {/* logo and search */}
@@ -96,9 +98,7 @@ const Navbar = () => {
                 </li>
                 <li
                   className={`text-sm font-semibold cursor-pointer  transition-colors duration-300 ${
-                    selected === "connections"
-                      ? "text-white"
-                      : "text-slate-400 "
+                    selected === "connections" ? "text-white" : "text-slate-400 "
                   }`}
                 >
                   <Link href="/connections">
@@ -113,6 +113,29 @@ const Navbar = () => {
                         <div className="w-full">
                           <div className="h-1 bg-white absolute translate-y-1 scale-x-125 rounded-full">
                             <p className="invisible text-xs">Connections</p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </Link>
+                </li>
+                <li
+                  className={`text-sm font-semibold cursor-pointer  transition-colors duration-300 ${
+                    selected === "connections" ? "text-white" : "text-slate-400 "
+                  }`}
+                >
+                  <Link href="/messages">
+                    <div className="flex flex-col items-center">
+                      <AiFillMessage
+                        className={`text-2xl duration-300 ${
+                          selected !== "messages" && "hover:scale-110 "
+                        }`}
+                      />
+                      <h1 className="text-xs duration-300">Messages</h1>
+                      {selected === "messages" && (
+                        <div className="w-full">
+                          <div className="h-1 bg-white absolute translate-y-1 scale-x-125 rounded-full">
+                            <p className="invisible text-xs">Messages</p>
                           </div>
                         </div>
                       )}

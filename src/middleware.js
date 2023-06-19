@@ -36,5 +36,6 @@ export const config = {
     "/profile/:path*",
     "/connections/:path*",
     "/home/:path*",
+    "/messages/:path*",
   ],
 };

@@ -111,6 +111,18 @@ const Post = ({ post, setPosts }) => {
       .then((res) => {
         console.log("commented successfully :", res.data);
         setComment("");
+        // update comment count
+        setPosts((prev) => {
+          return prev.map((item) => {
+            if (item.id === post.id) {
+              return {
+                ...item,
+                comments: item.comments + 1,
+              };
+            }
+            return item;
+          });
+        });
         _loadComments();
       })
       .catch((err) => {
@@ -130,12 +142,18 @@ const Post = ({ post, setPosts }) => {
             alt="user"
             height={50}
             width={50}
-            src={post?.user?.image ? `${apiEndPoints.BASE_URL}${post.user.image}` : "/images/profile-placeholder.avif"}
+            src={
+              post?.user?.image
+                ? `${apiEndPoints.BASE_URL}${post.user.image}`
+                : "/images/profile-placeholder.avif"
+            }
           />
           <div className="ml-3 w-full flex items-center justify-between">
             <div>
               <p className="font-bold text-sm md:text-base">{post?.user?.fullname}</p>
-              {post?.user?.work && <p className="text-slate-500 text-xs md:text-sm">{post?.user?.work}</p>}
+              {post?.user?.work && (
+                <p className="text-slate-500 text-xs md:text-sm">{post?.user?.work}</p>
+              )}
             </div>
             <p className="text-slate-500 text-xs md:text-sm">{format(post.createdAt)}</p>
           </div>
@@ -145,7 +163,16 @@ const Post = ({ post, setPosts }) => {
         <p className="text-sm md:text-base">{post?.title}</p>
         <p className="text-slate-500 text-xs md:text-sm">{post?.description}</p>
       </div>
-      {post?.image && <img src={`${apiEndPoints.BASE_URL}${post.image}`} className="mt-2" alt="post-image" />}
+      {post?.image && (
+        <img src={`${apiEndPoints.BASE_URL}${post.image}`} className="mt-2" alt="post-image" />
+      )}
+      <div className="flex mx-4 mt-2 py-1 justify-between text-xs md:text-sm">
+        <span className="text-slate-400">{getNoOfLikes()}</span>
+        <span className="text-slate-400">
+          {post?.comments} Comment{post?.comments > 1 ? "s" : ""}
+        </span>
+      </div>
+
       <div className="flex border-t border-slate-600 mx-4 mt-2 py-1 justify-between">
         <div
           className={`flex font-bold items-center gap-2 p-3 hover:scale-110 rounded duration-100 cursor-pointer ${
@@ -154,7 +181,7 @@ const Post = ({ post, setPosts }) => {
           onClick={handleLikePress}
         >
           <BiLike className={`text-2xl `} />
-          {getNoOfLikes()}
+          Like
         </div>
 
         <div
@@ -206,7 +233,14 @@ const Post = ({ post, setPosts }) => {
                   </div>
                 ))
               : // placeholder
-                [1, 2, 3, 4].map((item) => (
+                (() => {
+                  // for custom no of placeholder comments
+                  const arr = [];
+                  for (let i = 0; i < post.comments; i++) {
+                    arr.push(i);
+                  }
+                  return arr;
+                })().map((item) => (
                   <div className="w-full bg-slate-700 rounded mb-2 p-2 animate-pulse" key={item}>
                     <div className="flex items-center">
                       <div className="w-10 h-10 rounded-full bg-slate-500" />

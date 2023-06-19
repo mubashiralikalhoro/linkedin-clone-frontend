@@ -103,7 +103,7 @@ const ConnectionsPage = ({ connectionRequestFromServer }) => {
   };
 
   return (
-    <div className="md:px-4 py-4">
+    <div className="md:px-4  py-4">
       <div className="rounded-md  w-full bg-slate-800 p-4">
         <h1 className=" font-bold text-lg">Connection Requests</h1>
 
@@ -132,7 +132,9 @@ const ConnectionsPage = ({ connectionRequestFromServer }) => {
               </div>
 
               {request.loading ? (
-                <LoaderIcon />
+                <div className="mt-4">
+                  <LoaderIcon />
+                </div>
               ) : (
                 <>
                   <div

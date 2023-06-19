@@ -7,6 +7,7 @@ const apiEndPoints = {
   POSTS: "/api/posts",
   SKILLS: "/api/skills",
   CONNECTIONS: "/api/connections",
+  MESSAGES: "/api/messages",
 };
 
 export default apiEndPoints;
