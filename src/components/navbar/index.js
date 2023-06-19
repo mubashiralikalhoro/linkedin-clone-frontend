@@ -58,6 +58,12 @@ const Navbar = () => {
       });
   };
 
+  const openLink = (link) => {
+    router.push(link).then(() => {
+      router.reload();
+    });
+  };
+
   return (
     <>
       <nav className="border-gray-200 fixed w-full bg-slate-800 p-2 px-4 flex flex-col items-center z-[9999]">
@@ -110,7 +116,7 @@ const Navbar = () => {
                             onClick={() => {
                               setResults([]);
                               setShowSearch(false);
-                              router.replace(`/profile/${user.username}`);
+                              openLink(`/profile/${user.username}`);
                             }}
                           >
                             <div className="flex mx-4 items-center cursor-pointer">
@@ -303,7 +309,7 @@ const Navbar = () => {
                         onClick={() => {
                           setResults([]);
                           setShowSearch(false);
-                          router.replace(`/profile/${user.username}`);
+                          openLink(`/profile/${user.username}`);
                         }}
                       >
                         <div className="flex mx-4 items-center cursor-pointer">
