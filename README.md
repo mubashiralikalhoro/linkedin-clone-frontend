@@ -1,6 +1,8 @@
 # LinkedIn Clone
 
-Welcome to our LinkedIn clone repository! This project aims to replicate the core functionalities of LinkedIn, offering users the ability to create accounts, create posts, like, comment, follow others, and even message each other.
+This project aims to replicate the core functionalities of LinkedIn, offering users the ability to create accounts, create posts, like, comment, follow others, and even message each other. I made this project for my semester lab project for Database Management System course.
+
+[Video Preview](https://youtu.be/qx2MOKVWJ9w)
 
 ## Features
 
