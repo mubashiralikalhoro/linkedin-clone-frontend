@@ -24,7 +24,7 @@ This project aims to replicate the core functionalities of LinkedIn, offering us
 1. Clone the repository: `git clone https://github.com/mubashiralikalhoro/linkedin-next-web.git`
 2. Navigate to the project directory: `cd linkedin-next-web`
 3. Install dependencies: `npm install`
-4. Start the [backend server](https://github.com/mubashiralikalhoro/linkedin-clone-backend)
+4. Start the [backend server](https://github.com/mubashiralikalhoro/linkedin-clone-backend) (currently private working on Readme.md)
 5. Start the development server: `npm run dev`
 6. Visit `http://localhost:4000` in your browser to use the application.
 
